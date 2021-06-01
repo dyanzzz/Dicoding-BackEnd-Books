@@ -1,6 +1,10 @@
 // routes.js : Memuat kode konfigurasi routing server seperti menentukan path, method, dan handler yang digunakan.
 
-const { addBooksHandler, getAllBooksHandler } = require('./handler');
+const {
+  addBooksHandler,
+  getAllBooksHandler,
+  getBookByIdHandler,
+} = require('./handler');
 
 const routes = [
   {
@@ -16,7 +20,7 @@ const routes = [
   {
     method: 'GET',
     path: '/books/{id}',
-    handler: () => {},
+    handler: getBookByIdHandler,
   },
   {
     method: 'PUT',
