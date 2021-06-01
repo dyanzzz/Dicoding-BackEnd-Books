@@ -183,9 +183,40 @@ const updateBookByIdHandler = (req, h) => {
   return response;
 };
 
+const deleteBookByIdHandler = (req, h) => {
+  const { id } = req.params;
+
+  const index = books.findIndex((book) => book.id === id);
+
+  let status = '';
+  let message = '';
+  let codeResponse = '';
+
+  if (index !== -1) {
+    books.splice(index, 1);
+
+    status = 'success';
+    message = 'Buku berhasil dihapus';
+    codeResponse = 200;
+  } else {
+    status = 'fail';
+    message = 'Buku gagal dihapus. Id tidak ditemukan';
+    codeResponse = 404;
+  }
+
+  const response = h.response({
+    status: status.toString(),
+    message: message.toString(),
+  });
+
+  response.code(codeResponse);
+  return response;
+};
+
 module.exports = {
   addBooksHandler,
   getAllBooksHandler,
   getBookByIdHandler,
   updateBookByIdHandler,
+  deleteBookByIdHandler,
 };
