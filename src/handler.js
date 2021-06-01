@@ -28,11 +28,11 @@ const addBooksHandler = (req, h) => {
 
   let status = '';
   let message = '';
-  let data = '';
+  let data;
   let codeResponse = '';
 
   if (name) {
-    if (readPage < pageCount) {
+    if (readPage <= pageCount) {
       books.push(newBook);
 
       const isSuccess = books.filter((book) => book.id === id).length > 0;
@@ -47,19 +47,16 @@ const addBooksHandler = (req, h) => {
       } else {
         status = 'error';
         message = 'Buku gagal ditambahkan';
-        data = {};
         codeResponse = 500;
       }
     } else {
       status = 'fail';
-      message = 'Gagal menambahkan buku. read page tidak boleh lebih besar dari page count';
-      data = {};
+      message = 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount';
       codeResponse = 400;
     }
   } else {
     status = 'fail';
     message = 'Gagal menambahkan buku. Mohon isi nama buku';
-    data = {};
     codeResponse = 400;
   }
 
@@ -100,7 +97,7 @@ const getBookByIdHandler = (req, h) => {
 
   let status = '';
   let message = '';
-  let data = '';
+  let data;
   let codeResponse = '';
 
   if (book !== undefined) {
@@ -113,7 +110,6 @@ const getBookByIdHandler = (req, h) => {
   } else {
     status = 'fail';
     message = 'Buku tidak ditemukan';
-    data = {};
     codeResponse = 404;
   }
 
@@ -141,7 +137,7 @@ const updateBookByIdHandler = (req, h) => {
 
   if (index !== -1) {
     if (name) {
-      if (readPage < pageCount) {
+      if (readPage <= pageCount) {
         books[index] = {
           ...books[index],
           name,
@@ -160,7 +156,7 @@ const updateBookByIdHandler = (req, h) => {
         codeResponse = 200;
       } else {
         status = 'fail';
-        message = 'Gagal memperbarui buku. read page tidak boleh lebih besar dari page count';
+        message = 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount';
         codeResponse = 400;
       }
     } else {
