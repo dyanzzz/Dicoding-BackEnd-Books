@@ -52,7 +52,7 @@ const addBooksHandler = (req, h) => {
       }
     } else {
       status = 'fail';
-      message = 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount';
+      message = 'Gagal menambahkan buku. read page tidak boleh lebih besar dari page count';
       data = {};
       codeResponse = 400;
     }
@@ -127,8 +127,65 @@ const getBookByIdHandler = (req, h) => {
   return response;
 };
 
+const updateBookByIdHandler = (req, h) => {
+  const { id } = req.params;
+
+  const { name, year, author, summary, publisher, pageCount, readPage, reading } = req.payload;
+
+  const updatedAt = new Date().toISOString();
+  const index = books.findIndex((book) => book.id === id);
+
+  let status = '';
+  let message = '';
+  let codeResponse = '';
+
+  if (index !== -1) {
+    if (name) {
+      if (readPage < pageCount) {
+        books[index] = {
+          ...books[index],
+          name,
+          year,
+          author,
+          summary,
+          publisher,
+          pageCount,
+          readPage,
+          reading,
+          updatedAt,
+        };
+
+        status = 'success';
+        message = 'Buku berhasil diperbarui';
+        codeResponse = 200;
+      } else {
+        status = 'fail';
+        message = 'Gagal memperbarui buku. read page tidak boleh lebih besar dari page count';
+        codeResponse = 400;
+      }
+    } else {
+      status = 'fail';
+      message = 'Gagal memperbarui buku. Mohon isi nama buku';
+      codeResponse = 400;
+    }
+  } else {
+    status = 'fail';
+    message = 'Gagal memperbarui buku. Id tidak ditemukan';
+    codeResponse = 404;
+  }
+
+  const response = h.response({
+    status: status.toString(),
+    message: message.toString(),
+  });
+
+  response.code(codeResponse);
+  return response;
+};
+
 module.exports = {
   addBooksHandler,
   getAllBooksHandler,
   getBookByIdHandler,
+  updateBookByIdHandler,
 };
