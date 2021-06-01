@@ -26,10 +26,6 @@ const addBooksHandler = (req, h) => {
     updatedAt,
   };
 
-  books.push(newBook);
-
-  const isSuccess = books.filter((book) => book.id === id).length > 0;
-
   let status = '';
   let message = '';
   let data = '';
@@ -37,6 +33,10 @@ const addBooksHandler = (req, h) => {
 
   if (name) {
     if (readPage < pageCount) {
+      books.push(newBook);
+
+      const isSuccess = books.filter((book) => book.id === id).length > 0;
+
       if (isSuccess) {
         status = 'success';
         message = 'Buku berhasil ditambahkan';
