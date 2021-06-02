@@ -9,7 +9,7 @@ const addBooksHandler = (req, h) => {
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
-  const finished = false;
+  const finished = (pageCount === readPage);
 
   const newBook = {
     id,
@@ -71,18 +71,40 @@ const addBooksHandler = (req, h) => {
 };
 
 const getAllBooksHandler = (req, h) => {
-  const data = books.map((book) => {
-    return {
-      id: book.id,
-      name: book.name,
-      publisher: book.publisher,
-    };
-  });
+  const { reading, finished, name } = req.query;
+
+  let data = books;
+
+  if (reading !== undefined) {
+    if (reading === '1') {
+      data = data.filter((item) => item.reading === (reading === '1'));
+    } else if (reading === '0') {
+      data = data.filter((item) => !item.reading === (reading !== '1'));
+    }
+  }
+
+  if (finished !== undefined) {
+    if (finished === '1') {
+      data = data.filter((item) => item.finished === (finished === '1'));
+    } else if (finished === '0') {
+      data = data.filter((item) => !item.finished === (finished !== '1'));
+    }
+  }
+
+  if (name !== undefined) {
+    data = data.filter((item) => item.name.toLowerCase().includes(name.toLowerCase()));
+  }
 
   const response = h.response({
     status: 'success',
     data: {
-      books: data,
+      books: data.map((book) => {
+        return {
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        };
+      }),
     },
   });
 
@@ -130,6 +152,7 @@ const updateBookByIdHandler = (req, h) => {
 
   const updatedAt = new Date().toISOString();
   const index = books.findIndex((book) => book.id === id);
+  const finished = (pageCount === readPage);
 
   let status = '';
   let message = '';
@@ -148,6 +171,7 @@ const updateBookByIdHandler = (req, h) => {
           pageCount,
           readPage,
           reading,
+          finished,
           updatedAt,
         };
 
